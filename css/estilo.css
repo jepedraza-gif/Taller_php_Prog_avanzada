@@ -1,0 +1,1426 @@
+/* ==========================================================
+   TALLER PHP · Tema "Dragon Ball" (panel de entrenamiento)
+   Mismos nombres de clases que el CSS anterior: solo cambia
+   el <link>. No se tocan HTML, PHP ni POO.
+
+   Paleta:  naranja (dominante) · azul eléctrico (contraste)
+            amarillo dorado (energía / información importante)
+   Motivo:  7 aplicaciones = 7 Esferas del Dragón (cada tarjeta
+            lleva su esfera con tantas estrellas como su número).
+
+   ÍNDICE
+    1. Variables y reset
+    2. Layout general
+    3. Header y navegación
+    4. Tipografía
+    5. Hero (.bienvenida)
+    6. Catálogo bento (.grid-aplicaciones / .tarjeta)
+    7. Contenedores de aplicación
+    8. Formularios
+    9. Botones
+   10. Resultados y errores
+   11. Series y chips
+   12. Tablas e historial
+   13. Calculadora
+   14. Árbol y recorridos
+   15. Elementos fijos
+   16. Footer
+   17. Scrollbar
+   18. @media
+   ========================================================== */
+
+/* ---------- 1. Variables y reset ---------- */
+:root {
+  /* Fondos: negro azulado, para que el naranja y el azul resalten */
+  --negro: #07070d;
+  --noche: #0b0f26;
+  --panel: #10142a;
+  --panel-2: #181d3d;
+  --borde: #262d5a;
+  --borde-claro: #3a4380;
+
+  /* Texto */
+  --texto: #f5f7ff;
+  --texto-2: #aab3d1;
+  --gris: #7d86a8;
+
+  /* Naranja (dominante) */
+  --naranja: #ff7a00;
+  --naranja-claro: #ff9a1f;
+  --naranja-oscuro: #c25500;
+
+  /* Azul eléctrico (contraste) */
+  --azul: #1e6bff;
+  --azul-claro: #38bdf8;
+
+  /* Amarillo dorado (energía) */
+  --amarillo: #ffd23f;
+  --amarillo-claro: #ffe680;
+
+  /* Estados */
+  --rojo: #ff4d4d;
+  --rojo-estrella: #c1121f;
+
+  --radio: 8px;
+  --sombra: 0 8px 24px rgba(0, 0, 0, 0.6);
+  --sombra-fuerte: 0 20px 45px rgba(0, 0, 0, 0.85);
+
+  /* Curva elástica: aproxima un rebote, no simula un resorte real */
+  --resorte: cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+.debug * {
+  border: 1px solid #0f0;
+}
+
+/* ---------- 2. Layout general ---------- */
+/* Flex en columna (antes grid): así el header sticky sí se queda fijo */
+body {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  font-family: "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+  font-size: 16px;
+  line-height: 1.6;
+  color: var(--texto);
+  background-color: var(--negro);
+  /* Auras: naranja a la izquierda, azul a la derecha */
+  background-image:
+    radial-gradient(ellipse at 0% 0%, rgba(255, 122, 0, 0.2) 0, transparent 50%),
+    radial-gradient(ellipse at 100% 20%, rgba(30, 107, 255, 0.22) 0, transparent 50%),
+    radial-gradient(circle at 50% 100%, rgba(255, 122, 0, 0.1) 0, transparent 50%);
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+}
+
+main {
+  flex: 1 1 auto;
+  width: 100%;
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 20px 4vw 70px;
+}
+
+/* ---------- 3. Header y navegación ---------- */
+header {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px 30px;
+  padding: 0 4vw;
+  background: linear-gradient(180deg, rgba(7, 8, 18, 0.98), rgba(11, 15, 38, 0.94));
+  box-shadow: 0 6px 28px rgba(255, 122, 0, 0.22);
+}
+
+/* Rayo de Ki bajo el header: naranja, dorado y azul */
+header::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  height: 3px;
+  background: linear-gradient(90deg, var(--naranja), var(--amarillo) 35%, var(--azul) 70%, transparent);
+}
+
+/* El h1 es el logotipo, con una esfera del dragón de 1 estrella */
+header h1 {
+  font-family: "Segoe UI Black", "Arial Black", Impact, sans-serif;
+  font-size: 22pt;
+  font-weight: 900;
+  letter-spacing: 5px;
+  text-transform: uppercase;
+  color: var(--naranja);
+  text-shadow: 0 0 16px rgba(255, 210, 63, 0.55);
+  white-space: nowrap;
+  padding: 10px 0;
+}
+
+header h1::before {
+  content: "\2605";
+  display: inline-block;
+  width: 30px;
+  height: 30px;
+  margin-right: 12px;
+  font-size: 16px;
+  line-height: 30px;
+  letter-spacing: 0;
+  text-align: center;
+  vertical-align: middle;
+  color: var(--rojo-estrella);
+  text-shadow: none;
+  border-radius: 50%;
+  background: radial-gradient(circle at 32% 28%, #ffe9a6 0%, #ffb02e 30%, #ff7a00 65%, #b34700 100%);
+  box-shadow: 0 0 16px rgba(255, 122, 0, 0.7);
+}
+
+nav {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  align-items: center;
+  align-content: center;
+  gap: 4px;
+}
+
+nav a {
+  position: relative;
+  padding: 8px 14px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--texto-2);
+  text-decoration: none;
+  border-radius: 4px;
+  transition-property: color, background-color;
+  transition-duration: 300ms;
+  transition-timing-function: var(--resorte);
+}
+
+/* Subrayado de Ki que crece desde el centro */
+nav a::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  bottom: 2px;
+  width: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--naranja), var(--amarillo));
+  border-radius: 3px;
+  box-shadow: 0 0 10px rgba(255, 210, 63, 0.7);
+  transition:
+    width 400ms var(--resorte),
+    left 400ms var(--resorte);
+}
+
+nav a:hover,
+nav a.activo {
+  color: var(--texto);
+  background-color: rgba(255, 122, 0, 0.12);
+}
+
+nav a.activo {
+  color: var(--amarillo);
+}
+
+nav a:hover::after,
+nav a.activo::after {
+  left: 14px;
+  width: calc(100% - 28px);
+}
+
+/* ---------- 4. Tipografía ---------- */
+h2 {
+  font-size: 28pt;
+  font-weight: 800;
+  line-height: 1.15;
+  color: var(--texto);
+}
+
+h3 {
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: var(--texto);
+}
+
+p {
+  color: var(--texto-2);
+}
+
+a {
+  color: var(--azul-claro);
+}
+
+.titulo {
+  color: var(--amarillo);
+  font-family: "Segoe UI Black", "Arial Black", Impact, sans-serif;
+  font-size: 32px;
+  font-weight: 900;
+  text-align: left;
+  text-transform: uppercase;
+  letter-spacing: 3px;
+  word-spacing: 6px;
+  text-shadow: 0 0 14px rgba(255, 122, 0, 0.6);
+  padding-left: 14px;
+  border-left: 6px solid var(--naranja);
+  margin-bottom: 22px;
+}
+
+/* ---------- 5. Hero (.bienvenida) ---------- */
+.bienvenida {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  min-height: 400px;
+  margin: 0 0 50px;
+  padding: 50px 6%;
+  overflow: hidden;
+  border-radius: 12px;
+  border-top-left-radius: 0;
+  border: 1px solid var(--borde);
+  border-left: 6px solid var(--naranja);
+  background-color: var(--noche);
+  background-image:
+    /* sombra para que el texto se lea */
+    linear-gradient(90deg, rgba(7, 7, 13, 0.88) 0%, rgba(7, 7, 13, 0.45) 55%, transparent 100%),
+    linear-gradient(0deg, var(--negro) 0%, transparent 38%),
+    /* líneas de velocidad estilo anime */
+    repeating-linear-gradient(
+      115deg,
+      rgba(255, 255, 255, 0.04) 0px,
+      rgba(255, 255, 255, 0.04) 2px,
+      transparent 2px,
+      transparent 30px
+    ),
+    /* aura naranja abajo y aura azul arriba */
+    radial-gradient(ellipse at 0% 100%, rgba(255, 122, 0, 0.6) 0%, transparent 55%),
+    radial-gradient(ellipse at 100% 0%, rgba(30, 107, 255, 0.5) 0%, transparent 55%);
+  box-shadow: var(--sombra-fuerte);
+  animation: aparecer 900ms var(--resorte) backwards;
+}
+
+/* Esfera del dragón de 4 estrellas, decorativa */
+.bienvenida::before {
+  content: "\2605\2605\A\2605\2605";
+  white-space: pre;
+  position: absolute;
+  top: 50%;
+  right: 7%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 250px;
+  height: 250px;
+  margin-top: -125px;
+  font-size: 44px;
+  line-height: 1.1;
+  text-align: center;
+  color: var(--rojo-estrella);
+  border-radius: 50%;
+  background: radial-gradient(circle at 32% 28%, #ffe9a6 0%, #ffb02e 28%, #ff7a00 62%, #b34700 100%);
+  box-shadow:
+    0 0 90px rgba(255, 122, 0, 0.55),
+    inset -18px -22px 44px rgba(120, 40, 0, 0.55);
+  animation: pulso-ki 3s ease-in-out infinite alternate;
+}
+
+.bienvenida h2 {
+  position: relative;
+  max-width: 640px;
+  font-family: "Segoe UI Black", "Arial Black", Impact, sans-serif;
+  font-size: 44pt;
+  font-weight: 900;
+  line-height: 1.05;
+  text-transform: uppercase;
+  letter-spacing: 3px;
+  color: var(--texto);
+  text-shadow:
+    0 0 24px rgba(255, 122, 0, 0.55),
+    0 4px 18px rgba(0, 0, 0, 0.9);
+}
+
+/* Etiqueta sobre el título (texto decorativo generado con CSS) */
+.bienvenida h2::before {
+  content: "Sala de entrenamiento";
+  display: block;
+  margin-bottom: 10px;
+  font-family: "Segoe UI", Arial, sans-serif;
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 4px;
+  color: var(--amarillo);
+  text-shadow: none;
+}
+
+.bienvenida p {
+  position: relative;
+  max-width: 520px;
+  margin-top: 12px;
+  font-size: 1.1rem;
+  color: #e4e8ff;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.9);
+}
+
+/* Etiqueta tipo "nivel de poder" */
+.bienvenida::after {
+  content: "7 desafíos disponibles";
+  position: relative;
+  align-self: flex-start;
+  margin-top: 22px;
+  padding: 10px 22px;
+  font-size: 0.85rem;
+  font-weight: 800;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: #1a0f00;
+  background: linear-gradient(90deg, var(--amarillo), var(--naranja-claro));
+  border-radius: 4px;
+  box-shadow: 0 0 22px rgba(255, 210, 63, 0.45);
+}
+
+/* ---------- 6. Catálogo bento ---------- */
+.grid-aplicaciones {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 22px;
+  counter-reset: app;
+  padding: 10px 0 30px;
+}
+
+.grid-aplicaciones::before {
+  content: "Elige tu desafío";
+  grid-column: 1 / -1;
+  font-family: "Segoe UI Black", "Arial Black", Impact, sans-serif;
+  font-size: 1.5rem;
+  font-weight: 900;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--texto);
+}
+
+.tarjeta {
+  /* Cada tarjeta define su aura (color y versión suave) */
+  --aura: #ff7a00;
+  --aura-suave: rgba(255, 122, 0, 0.32);
+  position: relative;
+  z-index: 1;
+  counter-increment: app;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  min-height: 230px;
+  padding: 22px;
+  overflow: hidden;
+  background-color: var(--panel);
+  background-image: radial-gradient(circle at 100% 0%, var(--aura-suave) 0%, transparent 60%);
+  border: 1px solid var(--borde);
+  border-top: 4px solid var(--aura);
+  border-radius: var(--radio);
+  box-shadow: var(--sombra);
+  transition-property: transform, box-shadow, opacity, border-color;
+  transition-duration: 500ms;
+  transition-timing-function: var(--resorte);
+  animation: aparecer 800ms var(--resorte) backwards;
+}
+
+/* Identidad propia por tarjeta, siempre dentro de la paleta */
+.tarjeta:nth-child(7n + 2) { --aura: #2f7bff; --aura-suave: rgba(47, 123, 255, 0.34); }
+.tarjeta:nth-child(7n + 3) { --aura: #ffa31a; --aura-suave: rgba(255, 163, 26, 0.3); }
+.tarjeta:nth-child(7n + 4) { --aura: #ff4d1a; --aura-suave: rgba(255, 77, 26, 0.3); }
+.tarjeta:nth-child(7n + 5) { --aura: #22c3ee; --aura-suave: rgba(34, 195, 238, 0.3); }
+.tarjeta:nth-child(7n + 6) { --aura: #6a5cff; --aura-suave: rgba(106, 92, 255, 0.34); }
+.tarjeta:nth-child(7n + 7) { --aura: #ffd23f; --aura-suave: rgba(255, 210, 63, 0.34); }
+
+/* Bento: la 1 y la 5 ocupan dos columnas; la 7 cierra a todo el ancho */
+.tarjeta:nth-child(1) {
+  grid-column: span 2;
+  min-height: 300px;
+}
+
+.tarjeta:nth-child(5) {
+  grid-column: span 2;
+}
+
+.tarjeta:nth-child(7) {
+  grid-column: 1 / -1;
+  min-height: 190px;
+  border-top-left-radius: 0;
+  background-image: linear-gradient(90deg, var(--aura-suave) 0%, transparent 65%);
+}
+
+.tarjeta:nth-child(1) h3 {
+  font-size: 1.9rem;
+  line-height: 1.1;
+}
+
+/* Entrada escalonada y discreta */
+.tarjeta:nth-child(2) { animation-delay: 80ms; }
+.tarjeta:nth-child(3) { animation-delay: 160ms; }
+.tarjeta:nth-child(4) { animation-delay: 240ms; }
+.tarjeta:nth-child(5) { animation-delay: 320ms; }
+.tarjeta:nth-child(6) { animation-delay: 400ms; }
+.tarjeta:nth-child(7) { animation-delay: 480ms; }
+
+/* Número gigante y translúcido, detrás del texto */
+.tarjeta::before {
+  content: counter(app);
+  position: absolute;
+  right: 14px;
+  bottom: -18px;
+  z-index: -1;
+  font-family: "Segoe UI Black", "Arial Black", Impact, sans-serif;
+  font-size: 150px;
+  font-weight: 900;
+  line-height: 1;
+  color: rgba(255, 255, 255, 0.06);
+  transition-property: color, transform;
+  transition-duration: 500ms;
+  transition-timing-function: var(--resorte);
+}
+
+.tarjeta:nth-child(1)::before {
+  font-size: 260px;
+  bottom: -40px;
+}
+
+/* Esfera del dragón: tantas estrellas como el número de la aplicación */
+.tarjeta::after {
+  content: "\2605";
+  white-space: pre;
+  position: absolute;
+  top: 18px;
+  left: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 46px;
+  height: 46px;
+  font-size: 22px;
+  line-height: 1.05;
+  text-align: center;
+  color: var(--rojo-estrella);
+  border-radius: 50%;
+  background: radial-gradient(circle at 32% 28%, #ffe9a6 0%, #ffb02e 30%, #ff7a00 65%, #b34700 100%);
+  box-shadow: 0 0 14px rgba(255, 122, 0, 0.5);
+}
+
+.tarjeta:nth-child(7n + 2)::after { content: "\2605\2605"; font-size: 16px; }
+.tarjeta:nth-child(7n + 3)::after { content: "\2605\2605\2605"; font-size: 12px; }
+.tarjeta:nth-child(7n + 4)::after { content: "\2605\2605\A\2605\2605"; font-size: 14px; }
+.tarjeta:nth-child(7n + 5)::after { content: "\2605\2605\2605\A\2605\2605"; font-size: 12px; }
+.tarjeta:nth-child(7n + 6)::after { content: "\2605\2605\2605\A\2605\2605\2605"; font-size: 12px; }
+.tarjeta:nth-child(7n + 7)::after { content: "\2605\2605\2605\A\2605\2605\2605\2605"; font-size: 10px; }
+
+.tarjeta h3 {
+  margin-bottom: 4px;
+  font-size: 1.3rem;
+  font-weight: 800;
+}
+
+.tarjeta h3 a {
+  color: var(--texto);
+  text-decoration: none;
+}
+
+/* Toda la tarjeta es clicable */
+.tarjeta h3 a::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+}
+
+.tarjeta p {
+  max-width: 44ch;
+  font-size: 0.92rem;
+  color: var(--texto-2);
+  transition-property: color;
+  transition-duration: 400ms;
+  transition-timing-function: var(--resorte);
+}
+
+/* Barra de Ki: se carga al pasar el cursor */
+.tarjeta p::after {
+  content: "";
+  display: block;
+  width: 0;
+  height: 4px;
+  margin-top: 14px;
+  background: linear-gradient(90deg, var(--aura), var(--amarillo));
+  border-radius: 4px;
+  box-shadow: 0 0 14px var(--aura);
+  transition-property: width;
+  transition-duration: 700ms;
+  transition-timing-function: var(--resorte);
+}
+
+/* Hover: la tarjeta acumula energía */
+.tarjeta:hover {
+  transform: translateY(-6px) scale(1.04);
+  border-color: var(--aura);
+  box-shadow:
+    0 0 0 1px var(--aura),
+    0 22px 44px rgba(0, 0, 0, 0.75),
+    0 0 44px var(--aura-suave);
+}
+
+.tarjeta:hover::before {
+  color: var(--aura-suave);
+  transform: translateY(-8px) scale(1.05);
+}
+
+/* La esfera pulsa con suavidad mientras se acumula el Ki */
+.tarjeta:hover::after {
+  animation: pulso-ki 1.2s ease-in-out infinite alternate;
+}
+
+.tarjeta:hover p {
+  color: var(--texto);
+}
+
+.tarjeta:hover p::after {
+  width: 100%;
+}
+
+/* Las demás tarjetas retroceden */
+.grid-aplicaciones:hover .tarjeta:not(:hover) {
+  opacity: 0.5;
+  transform: scale(0.98);
+}
+
+/* ---------- 7. Contenedores de aplicación ---------- */
+.content,
+.app,
+.app-ancha,
+.contenedor-app {
+  width: 100%;
+  max-width: 780px;
+  margin: 10px auto 30px;
+  padding: 32px;
+  background-color: rgba(16, 20, 42, 0.95);
+  border: 1px solid var(--borde);
+  border-top: 5px solid var(--naranja);
+  border-radius: 12px;
+  border-top-left-radius: 0;
+  box-shadow:
+    var(--sombra-fuerte),
+    0 -6px 30px rgba(255, 122, 0, 0.12);
+  animation: aparecer 700ms var(--resorte) backwards;
+}
+
+.app-ancha {
+  max-width: 1050px;
+}
+
+/* Título de cada aplicación con barra de poder */
+.content > h2,
+.app > h2,
+.app-ancha > h2,
+.contenedor-app > h2 {
+  font-family: "Segoe UI Black", "Arial Black", Impact, sans-serif;
+  font-size: 24pt;
+  font-weight: 900;
+  line-height: 1.1;
+  text-align: left;
+  letter-spacing: 1px;
+}
+
+.content > h2::after,
+.app > h2::after,
+.app-ancha > h2::after,
+.contenedor-app > h2::after {
+  content: "";
+  display: block;
+  width: 90px;
+  height: 4px;
+  margin-top: 14px;
+  background: linear-gradient(90deg, var(--naranja), var(--amarillo));
+  border-radius: 4px;
+  box-shadow: 0 0 14px rgba(255, 210, 63, 0.6);
+}
+
+.content > p,
+.app > p,
+.app-ancha > p,
+.contenedor-app > p {
+  margin: 14px 0 22px;
+}
+
+/* ---------- 8. Formularios ---------- */
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+/* Aire entre un campo y el siguiente */
+form > * + label,
+form > * + .campo,
+form > * + .fila,
+form > * + .opciones {
+  margin-top: 14px;
+}
+
+.campo {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.fila {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+.fila > .campo {
+  flex: 1 1 200px;
+}
+
+label {
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--amarillo);
+}
+
+input[type="text"],
+input[type="number"],
+select,
+textarea {
+  width: 100%;
+  min-width: 120px;
+  max-width: 100%;
+  padding: 13px 16px;
+  font-family: inherit;
+  font-size: 1rem;
+  color: var(--texto);
+  background-color: #0b0f26;
+  border: 2px solid var(--borde);
+  border-radius: 6px;
+  outline: none;
+  transition-property: border-color, background-color, box-shadow;
+  transition-duration: 300ms;
+  transition-timing-function: var(--resorte);
+}
+
+select option {
+  background-color: #0b0f26;
+}
+
+textarea {
+  min-height: 90px;
+  resize: vertical;
+}
+
+input::placeholder,
+textarea::placeholder {
+  color: #5b6490;
+}
+
+input[type="text"]:hover,
+input[type="number"]:hover,
+select:hover,
+textarea:hover {
+  border-color: var(--borde-claro);
+}
+
+/* Enfoque en azul eléctrico: muy visible, sin tapar el texto */
+input:focus,
+select:focus,
+textarea:focus {
+  background-color: #10163a;
+  border-color: var(--azul-claro);
+  box-shadow: 0 0 0 4px rgba(56, 189, 248, 0.25);
+}
+
+small,
+.ayuda {
+  font-size: 0.8rem;
+  font-style: italic;
+  color: var(--gris);
+}
+
+.opciones {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 18px;
+}
+
+.opciones label {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  text-transform: none;
+  letter-spacing: 0;
+  font-size: 1rem;
+  font-weight: normal;
+  color: var(--texto);
+  cursor: pointer;
+}
+
+input[type="radio"],
+input[type="checkbox"] {
+  accent-color: var(--naranja);
+}
+
+/* ---------- 9. Botones ---------- */
+/* Principal: naranja */
+button,
+.btn {
+  display: inline-block;
+  align-self: flex-start;
+  cursor: pointer;
+  padding: 13px 32px;
+  font-family: inherit;
+  font-size: 1rem;
+  font-weight: 800;
+  letter-spacing: 1px;
+  text-align: center;
+  text-decoration: none;
+  color: #1a0f00;
+  background-color: var(--naranja);
+  border: none;
+  border-radius: 6px;
+  box-shadow: 0 4px 0 var(--naranja-oscuro);
+  transition-property: background-color, transform, border-radius, box-shadow;
+  transition-duration: 250ms, 350ms, 500ms, 300ms;
+  transition-timing-function: var(--resorte);
+}
+
+form > button {
+  margin-top: 20px;
+}
+
+button:hover,
+.btn:hover {
+  background-color: var(--naranja-claro);
+  border-radius: 30px;
+  box-shadow:
+    0 4px 0 var(--naranja-oscuro),
+    0 0 28px rgba(255, 122, 0, 0.65);
+  transform: translateY(-2px) scale(1.05);
+}
+
+/* Presión: respuesta inmediata */
+button:active,
+.btn:active {
+  transform: translateY(3px) scale(0.96);
+  box-shadow: 0 1px 0 var(--naranja-oscuro);
+  transition-duration: 80ms;
+}
+
+/* Secundario: azul */
+.btn-secundario {
+  color: #ffffff;
+  background-color: var(--azul);
+  box-shadow: 0 4px 0 #0f3fa8;
+}
+
+.btn-secundario:hover {
+  background-color: #3b82ff;
+  box-shadow:
+    0 4px 0 #0f3fa8,
+    0 0 28px rgba(30, 107, 255, 0.7);
+}
+
+.btn-secundario:active {
+  box-shadow: 0 1px 0 #0f3fa8;
+}
+
+/* Peligro: rojo oscuro, discreto hasta el hover */
+.btn-peligro {
+  color: #ffd6d6;
+  background-color: #3a1620;
+  box-shadow: 0 4px 0 #1f0b11;
+}
+
+.btn-peligro:hover {
+  color: #ffffff;
+  background-color: #b3202c;
+  box-shadow:
+    0 4px 0 #6e1019,
+    0 0 26px rgba(255, 77, 77, 0.55);
+}
+
+.btn-peligro:active {
+  box-shadow: 0 1px 0 #6e1019;
+}
+
+/* ---------- 10. Resultados y errores ---------- */
+/* Resultado correcto: amarillo dorado (información importante) */
+.resultado {
+  margin-top: 26px;
+  padding: 22px;
+  background-color: rgba(255, 210, 63, 0.06);
+  border: 1px solid rgba(255, 210, 63, 0.35);
+  border-left: 8px solid var(--amarillo);
+  border-radius: 8px;
+  animation: aparecer 500ms var(--resorte) backwards;
+}
+
+.resultado h3 {
+  margin-bottom: 10px;
+  font-size: 0.9rem;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--amarillo);
+}
+
+.resultado p {
+  margin-bottom: 6px;
+  color: var(--texto);
+}
+
+.resultado strong {
+  color: var(--amarillo);
+}
+
+/* Cifra grande: como un lector de poder */
+.resultado-grande {
+  display: block;
+  margin-top: 8px;
+  font-family: "Courier New", Courier, monospace;
+  font-size: 32pt;
+  font-weight: bold;
+  text-align: center;
+  letter-spacing: 8px;
+  color: var(--amarillo-claro);
+  text-shadow:
+    0 0 14px rgba(255, 210, 63, 0.7),
+    0 0 30px rgba(255, 122, 0, 0.5);
+  word-break: break-all;
+}
+
+/* Error: rojo, inconfundible frente al resultado.
+   .mensaje-error es la clase de tu HTML (junto a .resultado) */
+.error,
+.mensaje-error,
+.resultado.mensaje-error {
+  margin-top: 22px;
+  padding: 14px 18px;
+  background-color: rgba(255, 77, 77, 0.1);
+  border: 1px solid rgba(255, 77, 77, 0.6);
+  border-left: 8px solid var(--rojo);
+  border-radius: 8px;
+  animation: temblor 450ms var(--resorte) 1;
+}
+
+.error p,
+.mensaje-error p,
+.resultado.mensaje-error p {
+  color: #ffb3b3;
+}
+
+/* ---------- 11. Series y chips ---------- */
+.serie {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  margin-top: 14px;
+}
+
+/* Cada chip es una pequeña esfera de energía azul */
+.chip {
+  min-width: 46px;
+  padding: 9px 15px;
+  text-align: center;
+  font-family: "Courier New", Courier, monospace;
+  font-weight: bold;
+  color: #ffffff;
+  background: radial-gradient(circle at 32% 28%, #8fd0ff 0%, var(--azul) 55%, #0a2a80 100%);
+  border-radius: 50%;
+  box-shadow: 0 0 16px rgba(30, 107, 255, 0.5);
+  transition-property: background-color, border-radius, transform, box-shadow;
+  transition-duration: 400ms, 400ms, 350ms, 400ms;
+  transition-timing-function: var(--resorte);
+}
+
+.chip:hover {
+  border-radius: 10px;
+  transform: scale(1.18);
+  box-shadow: 0 0 22px rgba(255, 122, 0, 0.8);
+  background: var(--naranja);
+  color: #1a0f00;
+}
+
+.chip-vacio {
+  font-style: italic;
+  background: #1c2148;
+  border-radius: 10px;
+  box-shadow: none;
+}
+
+/* ---------- 12. Tablas e historial ---------- */
+table {
+  width: 100%;
+  margin-top: 16px;
+  border-collapse: collapse;
+  overflow: hidden;
+  border-radius: 8px;
+}
+
+th {
+  padding: 12px;
+  text-align: center;
+  font-size: 0.8rem;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--amarillo);
+  background-color: #0a0d22;
+  border-bottom: 3px solid var(--naranja);
+}
+
+td {
+  padding: 11px 12px;
+  text-align: center;
+  background-color: var(--panel);
+  border-bottom: 1px solid var(--borde);
+}
+
+tr:nth-child(even) td {
+  background-color: #141937;
+}
+
+tr:hover td {
+  background-color: #1f2755;
+}
+
+.historial {
+  margin-top: 30px;
+}
+
+.historial h3 {
+  margin-bottom: 10px;
+  padding-left: 10px;
+  border-left: 5px solid var(--naranja);
+}
+
+.historial ul {
+  list-style: none;
+  max-height: 270px;
+  overflow-y: auto;
+  padding: 10px;
+  background-color: #0a0d22;
+  border: 1px solid var(--borde);
+  border-radius: 8px;
+}
+
+.historial li {
+  margin-bottom: 6px;
+  padding: 9px 14px;
+  font-family: "Courier New", Courier, monospace;
+  background-color: var(--panel);
+  border-left: 5px solid var(--azul);
+  border-radius: 4px;
+  transition-property: transform, background-color, border-left-color;
+  transition-duration: 350ms;
+  transition-timing-function: var(--resorte);
+}
+
+.historial li:hover {
+  transform: translateX(6px);
+  background-color: #1f2755;
+  border-left-color: var(--naranja);
+}
+
+/* ---------- 13. Calculadora ---------- */
+.calculadora {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  grid-template-areas: 'p p p p';
+  gap: 10px;
+}
+
+/* La pantalla funciona como un rastreador de poder */
+.calculadora .pantalla {
+  grid-area: p;
+  padding: 20px;
+  overflow: hidden;
+  text-align: right;
+  white-space: nowrap;
+  font-family: "Courier New", Courier, monospace;
+  font-size: 26pt;
+  color: var(--azul-claro);
+  background-color: #03040a;
+  border: 1px solid var(--borde-claro);
+  border-radius: 8px;
+  text-shadow: 0 0 14px rgba(56, 189, 248, 0.8);
+  box-shadow: inset 0 0 24px rgba(30, 107, 255, 0.25);
+}
+
+.calculadora button {
+  align-self: stretch;
+  padding: 16px 0;
+  font-size: 1.2rem;
+  border-radius: 8px;
+}
+
+/* ---------- 14. Árbol y recorridos ---------- */
+/* Caja del árbol. El dibujo SVG se estiliza en css/arbol.css */
+.arbol {
+  margin-top: 22px;
+  padding: 22px;
+  overflow-x: auto;
+  text-align: center;
+  background-color: #080a1c;
+  border: 2px dashed var(--borde-claro);
+  border-radius: 12px;
+}
+
+.arbol ul {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  padding-top: 24px;
+  list-style: none;
+}
+
+.arbol li {
+  position: relative;
+  padding: 24px 8px 0;
+  text-align: center;
+}
+
+.arbol li::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 50%;
+  height: 24px;
+  border-left: 2px solid var(--gris);
+}
+
+/* Nodos como esferas del dragón */
+.nodo {
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  width: 48px;
+  height: 48px;
+  font-weight: bold;
+  color: #1a0f00;
+  background: radial-gradient(circle at 32% 28%, #ffe9a6 0%, #ffb02e 30%, #ff7a00 65%, #b34700 100%);
+  border: 3px solid var(--amarillo-claro);
+  border-radius: 50%;
+  box-shadow: 0 0 14px rgba(255, 122, 0, 0.6);
+  transition-property: width, border-radius, box-shadow;
+  transition-duration: 500ms, 500ms, 400ms;
+  transition-timing-function: var(--resorte);
+}
+
+.nodo:hover {
+  width: 84px;
+  border-radius: 12px;
+  box-shadow: 0 0 24px rgba(255, 210, 63, 0.9);
+}
+
+.recorridos {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 12px;
+  margin-top: 18px;
+}
+
+.recorridos p {
+  padding: 12px 16px;
+  color: var(--texto);
+  background-color: var(--panel);
+  border: 1px solid var(--borde);
+  border-left: 5px solid var(--azul-claro);
+  border-radius: 6px;
+}
+
+/* ---------- 15. Elementos fijos ---------- */
+/* Volver arriba: esfera naranja con pulso suave de energía */
+.subir {
+  position: fixed;
+  right: 22px;
+  bottom: 22px;
+  z-index: 200;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 50px;
+  height: 50px;
+  padding: 0;
+  font-size: 20pt;
+  text-decoration: none;
+  color: #1a0f00;
+  background: radial-gradient(circle at 32% 28%, #ffe9a6 0%, #ffb02e 30%, #ff7a00 65%, #b34700 100%);
+  border-radius: 50%;
+  box-shadow: var(--sombra-fuerte);
+  transition-property: transform;
+  transition-duration: 350ms;
+  transition-timing-function: var(--resorte);
+  animation: pulso-ki 2.4s ease-in-out infinite alternate;
+}
+
+.subir:hover {
+  transform: scale(1.15) translateY(-3px);
+}
+
+/* Logo que cruza la pantalla (mismos keyframes de clase) */
+.logo {
+  position: fixed;
+  left: -150px;
+  top: 90px;
+  width: 90px;
+  border-radius: 50%;
+  pointer-events: none;
+  animation-name: logo;
+  animation-duration: 5s;
+  animation-timing-function: ease-in-out;
+  animation-direction: alternate;
+  animation-iteration-count: 2;
+}
+
+@keyframes logo {
+  0% {
+    left: -150px;
+    box-shadow: -30px 1px 10px 4px rgba(255, 122, 0, 0.5);
+  }
+  90% {
+    left: calc(100vw + 150px);
+  }
+  100% {
+    box-shadow: 30px 1px 10px 4px rgba(30, 107, 255, 0.5);
+    border-radius: 0px;
+  }
+}
+
+/* ---------- 16. Footer ---------- */
+footer {
+  position: relative;
+  padding: 30px 4vw;
+  text-align: center;
+  font-size: 0.85rem;
+  letter-spacing: 1px;
+  color: var(--gris);
+  background-color: #03040a;
+}
+
+/* Misma línea de Ki del header, invertida */
+footer::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 3px;
+  background: linear-gradient(90deg, transparent, var(--azul) 30%, var(--amarillo) 65%, var(--naranja));
+}
+
+footer p {
+  color: inherit;
+}
+
+/* ---------- 17. Scrollbar ---------- */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: #07070d;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #2b3366;
+  border-radius: 6px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--naranja);
+}
+
+/* ---------- Animaciones ---------- */
+/* Entrada discreta: sube con un pequeño rebote */
+@keyframes aparecer {
+  0% {
+    opacity: 0;
+    transform: translateY(24px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Pulso de Ki: el resplandor crece y baja con suavidad */
+@keyframes pulso-ki {
+  0% {
+    box-shadow: 0 0 14px rgba(255, 122, 0, 0.45);
+  }
+  100% {
+    box-shadow: 0 0 34px 4px rgba(255, 210, 63, 0.75);
+  }
+}
+
+@keyframes temblor {
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+  25% {
+    transform: translateX(-8px);
+  }
+  75% {
+    transform: translateX(8px);
+  }
+}
+
+/* ---------- 18. @media ---------- */
+/* Tablet: 2 columnas. La 1, la 6 y la 7 ocupan el ancho completo */
+@media (max-width: 1100px) {
+  .grid-aplicaciones {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .tarjeta:nth-child(5) {
+    grid-column: span 1;
+  }
+
+  .tarjeta:nth-child(6) {
+    grid-column: span 2;
+  }
+
+  .bienvenida h2 {
+    font-size: 34pt;
+  }
+
+  .bienvenida::before {
+    width: 190px;
+    height: 190px;
+    margin-top: -95px;
+    font-size: 32px;
+  }
+}
+
+/* Móvil: una columna */
+@media (max-width: 760px) {
+  header {
+    flex-direction: column;
+    justify-content: center;
+    padding: 6px 12px 10px;
+  }
+
+  header h1 {
+    font-size: 17pt;
+    letter-spacing: 3px;
+  }
+
+  nav {
+    justify-content: center;
+  }
+
+  nav a {
+    font-size: 0.8rem;
+    padding: 6px 9px;
+  }
+
+  .bienvenida {
+    min-height: 340px;
+    padding: 30px 22px;
+  }
+
+  .bienvenida h2 {
+    font-size: 26pt;
+    letter-spacing: 2px;
+  }
+
+  /* La esfera decorativa se esconde para no competir con el texto */
+  .bienvenida::before {
+    display: none;
+  }
+
+  .grid-aplicaciones {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 16px;
+  }
+
+  .tarjeta:nth-child(1),
+  .tarjeta:nth-child(5),
+  .tarjeta:nth-child(6),
+  .tarjeta:nth-child(7) {
+    grid-column: auto;
+  }
+
+  .tarjeta,
+  .tarjeta:nth-child(1),
+  .tarjeta:nth-child(7) {
+    min-height: 200px;
+  }
+
+  .tarjeta:nth-child(1) h3 {
+    font-size: 1.5rem;
+  }
+
+  .tarjeta:nth-child(1)::before {
+    font-size: 180px;
+    bottom: -24px;
+  }
+
+  .content,
+  .app,
+  .app-ancha,
+  .contenedor-app {
+    padding: 20px;
+  }
+
+  .content > h2,
+  .app > h2,
+  .app-ancha > h2,
+  .contenedor-app > h2 {
+    font-size: 19pt;
+  }
+
+  .resultado-grande {
+    font-size: 20pt;
+    letter-spacing: 3px;
+  }
+
+  button,
+  .btn {
+    align-self: stretch;
+  }
+
+  .calculadora .pantalla {
+    font-size: 20pt;
+  }
+
+  /* La tabla se desplaza dentro de su caja en vez de romper el diseño */
+  table {
+    display: block;
+    overflow-x: auto;
+  }
+
+  .tarjeta:hover {
+    transform: scale(1.02);
+  }
+}
+
+/* Móvil pequeño */
+@media (max-width: 420px) {
+  header h1 {
+    font-size: 14pt;
+  }
+
+  .bienvenida h2 {
+    font-size: 22pt;
+  }
+
+  .calculadora {
+    gap: 6px;
+  }
+}
+
+/* Movimiento reducido: respeta la preferencia del sistema */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 1ms !important;
+    animation-delay: 0ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 1ms !important;
+  }
+}

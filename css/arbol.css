@@ -1,0 +1,72 @@
+/* ==========================================================
+   css/arbol.css
+   Estilos del dibujo del árbol binario (punto 6).
+   Todo lo del dibujo está aquí: tamaños y colores.
+   ========================================================== */
+
+/* ---------- Caja que contiene el dibujo ---------- */
+.arbol {
+  margin-top: 22px;
+  padding: 22px;
+  text-align: center;
+  background-color: #111117;
+  border-width: 2px;
+  border-style: dashed;
+  border-color: #2e2e3a;
+  border-radius: 15px;
+}
+
+/* El dibujo se achica solo en pantallas pequeñas */
+.arbol-svg {
+  max-width: 100%;
+  height: auto;
+}
+
+/* ---------- Líneas ---------- */
+/* OJO: en SVG el color del contorno es "stroke" y el relleno es "fill" */
+.arbol-linea-izq {
+  stroke: #4f8cff;
+  stroke-width: 3px;
+}
+
+.arbol-linea-der {
+  stroke: #46d369;
+  stroke-width: 3px;
+}
+
+/* ---------- Nodos ---------- */
+.arbol-nodo {
+  fill: #e50914;
+  stroke: #ffffff;
+  stroke-width: 2px;
+  transition-property: fill;
+  transition-duration: 500ms;
+  transition-timing-function: ease-in-out;
+}
+
+.arbol-nodo:hover {
+  fill: #f6b800;
+}
+
+/* La raíz tiene su propio color */
+.arbol-raiz {
+  fill: #113ccf;
+}
+
+/* Texto dentro del nodo */
+.arbol-texto {
+  fill: #ffffff;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 16px;
+  font-weight: bold;
+  text-anchor: middle;
+}
+
+/* ---------- Leyenda ---------- */
+.arbol-leyenda {
+  margin-top: 12px;
+  text-align: center;
+  font-size: 13px;
+  font-style: italic;
+  color: #9a9aab;
+}
