@@ -12,7 +12,6 @@ require 'include/encabezado.php';
     foreach ($aplicaciones as $app) {
         echo '<article class="tarjeta">';
         echo '<h3><a href="' . $app['archivo'] . '">' . $app['nombre'] . '</a></h3>';
-        echo '<p>' . $app['descripcion'] . '</p>';
         echo '</article>';
     }
     ?>

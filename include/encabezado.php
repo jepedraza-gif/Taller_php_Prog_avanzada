@@ -1,12 +1,12 @@
 <?php
 $aplicaciones = [
-    ["archivo" => "acronimo.php", "nombre" => "1. Acrónimo", "descripcion" => "Convierte una frase en su acrónimo."],
-    ["archivo" => "fibonacci_factorial.php", "nombre" => "2. Fibonacci o Factorial", "descripcion" => "Calcula la sucesión de Fibonacci o el factorial."],
-    ["archivo" => "estadistica.php", "nombre" => "3. Estadística", "descripcion" => "Calcula promedio, mediana y moda."],
-    ["archivo" => "conjuntos.php", "nombre" => "4. Conjuntos A y B", "descripcion" => "Operaciones de unión, intersección y diferencias."],
-    ["archivo" => "binario.php", "nombre" => "5. Entero a Binario", "descripcion" => "Convierte un entero al sistema binario."],
-    ["archivo" => "arbol_binario.php", "nombre" => "6. Árbol Binario", "descripcion" => "Construye un árbol a partir de sus recorridos."],
-    ["archivo" => "calculadora.php", "nombre" => "7. Calculadora", "descripcion" => "Realiza operaciones matemáticas con historial."]
+    ["archivo" => "acronimo.php", "nombre" => "1. Acrónimo"],
+    ["archivo" => "fibonacci_factorial.php", "nombre" => "2. Fibonacci o Factorial"],
+    ["archivo" => "estadistica.php", "nombre" => "3. Estadística"],
+    ["archivo" => "conjuntos.php", "nombre" => "4. Conjuntos A y B"],
+    ["archivo" => "binario.php", "nombre" => "5. Entero a Binario"],
+    ["archivo" => "arbol_binario.php", "nombre" => "6. Árbol Binario"],
+    ["archivo" => "calculadora.php", "nombre" => "7. Calculadora"]
 ];
 ?>
 <!doctype html>
