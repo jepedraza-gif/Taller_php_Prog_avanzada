@@ -61,20 +61,19 @@ require 'include/encabezado.php';
         <label for="num1">Primer número:</label>
         <input type="number" step="any" id="num1" name="num1" required>
 
-        <label for="operacion">Operación:</label>
-        <select id="operacion" name="operacion" required>
-            <option value="">Selecciona una operación</option>
-            <option value="suma">Suma (+)</option>
-            <option value="resta">Resta (-)</option>
-            <option value="multiplicacion">Multiplicación (x)</option>
-            <option value="division">División (/)</option>
-            <option value="porcentaje">Porcentaje (% de)</option>
-        </select>
+        <label>Operación:</label>
+        <div class="operaciones-grupo">
+            <button type="submit" name="operacion" value="suma">Suma (+)</button>
+            <button type="submit" name="operacion" value="resta">Resta (-)</button>
+            <button type="submit" name="operacion" value="multiplicacion">Multiplicación (x)</button>
+            <button type="submit" name="operacion" value="division">División (/)</button>
+            <button type="submit" name="operacion" value="porcentaje">Porcentaje (% de)</button>
+        </div>
 
         <label for="num2">Segundo número:</label>
         <input type="number" step="any" id="num2" name="num2" required>
 
-        <button type="submit">Calcular</button>
+        <button type="submit" class="calcular">Calcular</button>
     </form>
 
     <?php

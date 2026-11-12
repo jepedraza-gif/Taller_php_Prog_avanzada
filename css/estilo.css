@@ -382,6 +382,39 @@ td {
 }
 
 
+.operaciones-grupo {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  gap: 8px;
+  margin: 10px 0;
+}
+
+.operaciones-grupo button {
+  padding: 12px;
+  border: 1px solid #89909a;
+  border-radius: 3px;
+  background-color: #fffdf8;
+  color: #19283d;
+  font-family: "Courier New", Courier, monospace;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.18s ease;
+}
+
+.operaciones-grupo button:hover {
+  background-color: #efd1a5;
+  border-color: #963c27;
+}
+
+.operaciones-grupo button:active {
+  background-color: #963c27;
+  color: #fffaf2;
+}
+
+button.calcular {
+  margin-top: 16px;
+}
+
 .resultado .arbol {
   padding: 20px;
   background-color: #19283d;
