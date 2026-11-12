@@ -3,9 +3,8 @@ require 'include/encabezado.php';
 require 'Clases/fibonacci_factorial.php';
 ?>
 
-<section class="contenedor-app">
+<section class="app-panel">
     <h2>2. Fibonacci o Factorial</h2>
-    <p>Ingresa un número entero y selecciona una operación.</p>
 
     <form method="POST" action="">
         <label for="numero">Número entero:</label>
@@ -17,12 +16,11 @@ require 'Clases/fibonacci_factorial.php';
             step="1"
             required>
 
-        <label for="operacion">Operación:</label>
-        <select id="operacion" name="operacion" required>
-            <option value="">Selecciona una opción</option>
-            <option value="fibonacci">Sucesión de Fibonacci</option>
-            <option value="factorial">Factorial</option>
-        </select>
+        <label>Operación:</label>
+        <div class="operaciones-grupo">
+            <button type="submit" name="operacion" value="fibonacci">Fibonacci</button>
+            <button type="submit" name="operacion" value="factorial">Factorial</button>
+        </div>
 
         <button type="submit">Calcular</button>
     </form>

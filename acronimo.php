@@ -3,13 +3,8 @@ require 'include/encabezado.php';
 require 'Clases/acronimo.php';
 ?>
 
-<section class="contenedor-app">
+<section class="app-panel">
     <h2>1. Generador de Acrónimos</h2>
-
-    <p>
-        Ingresa una frase para convertirla en su acrónimo.
-        Los espacios y guiones separan las palabras.
-    </p>
 
     <form method="POST" action="">
         <label for="frase">Frase original:</label>

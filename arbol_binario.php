@@ -5,9 +5,8 @@ require 'Clases/arbol_binario.php';
 
 <link rel="stylesheet" href="css/arbol.css">
 
-<section class="contenedor-app">
+<section class="app-panel">
     <h2>6. Constructor de Árbol Binario</h2>
-    <p>Ingresa al menos dos recorridos separados por espacios (Ej: A B D E C). Si ingresas los tres, se calculará por defecto con Preorden e Inorden.</p>
 
     <form method="POST" action="">
         <label for="pre">Preorden:</label>

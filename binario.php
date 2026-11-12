@@ -3,9 +3,8 @@ require 'include/encabezado.php';
 require 'Clases/binario.php';
 ?>
 
-<section class="contenedor-app">
+<section class="app-panel">
     <h2>5. Conversión de entero a binario</h2>
-    <p>Ingresa un número entero igual o mayor que cero.</p>
 
     <form method="POST" action="">
         <label for="numero">Número entero:</label>
