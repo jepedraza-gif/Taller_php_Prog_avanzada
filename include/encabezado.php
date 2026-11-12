@@ -15,13 +15,13 @@ $aplicaciones = [
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Taller PHP - Programación Web</title>
+    <title>Taller PHP - Programación Avanzada</title>
     <link rel="stylesheet" href="css/estilo.css">
 </head>
 
 <body>
     <header>
-        <h1>Taller de Programación Web - aplicaciones</h1>
+        <h1>Taller de Programación Avanzada - Aplicaciones</h1>
         <nav>
             <a href="index.php">Inicio</a>
             <?php

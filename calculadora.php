@@ -1,7 +1,6 @@
 <?php
 session_start();
 require 'Clases/calculadora.php';
-require 'include/encabezado.php';
 
 if (empty($_SESSION["historial"])) {
     $_SESSION["historial"] = [];
@@ -49,6 +48,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     header("Location: calculadora.php");
     exit;
 }
+
+require 'include/encabezado.php';
 
 ?>
 

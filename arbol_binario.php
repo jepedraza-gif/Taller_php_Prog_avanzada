@@ -24,9 +24,9 @@ require 'Clases/arbol_binario.php';
 
     <?php
     if ($_SERVER["REQUEST_METHOD"] == "POST") {
-        $pre = $_POST["pre"];
-        $in = $_POST["in"];
-        $post = $_POST["post"];
+        $pre = empty($_POST["pre"]) ? "" : $_POST["pre"];
+        $in = empty($_POST["in"]) ? "" : $_POST["in"];
+        $post = empty($_POST["post"]) ? "" : $_POST["post"];
 
         $camposLlenos = 0;
         if (!empty($pre)) $camposLlenos++;

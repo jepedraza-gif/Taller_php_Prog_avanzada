@@ -10,6 +10,16 @@ class Acronimo
 
     public function generar()
     {
+        $fraseLimpia = '';
+        $longitudFrase = strlen($this->frase);
+        for ($k = 0; $k < $longitudFrase; $k++) {
+            $c = $this->frase[$k];
+            if (($c >= 'a' && $c <= 'z') || ($c >= 'A' && $c <= 'Z') || $c == ' ' || $c == '-') {
+                $fraseLimpia .= $c;
+            }
+        }
+        $this->frase = $fraseLimpia;
+
         $resultadoAcronimo = '';
         $esNuevaPalabra = true;
         $minusculas = 'abcdefghijklmnopqrstuvwxyz';

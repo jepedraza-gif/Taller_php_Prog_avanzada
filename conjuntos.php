@@ -10,61 +10,13 @@ require 'Clases/conjuntos.php';
     <?php
     if (
         $_SERVER["REQUEST_METHOD"] == "POST" &&
-        empty($_POST["conjuntoA"]) &&
-        empty($_POST["conjuntoB"]) &&
-        (!empty($_POST["cantidadA"]) || $_POST["cantidadA"] == "0")
-    ) {
-        $cantidadA = (int)$_POST["cantidadA"];
-        $cantidadB = (int)$_POST["cantidadB"];
-
-        if (
-            $cantidadA < 1 || $cantidadA > 20 ||
-            $cantidadB < 1 || $cantidadB > 20
-        ) {
-            echo '<div class="resultado mensaje-error">';
-            echo '<p>Cada conjunto debe tener entre 1 y 20 elementos.</p>';
-            echo '</div>';
-        } else {
-    ?>
-            <form method="POST" action="">
-                <input type="hidden" name="cantidadA" value="<?php echo $cantidadA; ?>">
-                <input type="hidden" name="cantidadB" value="<?php echo $cantidadB; ?>">
-
-                <div class="conjuntos-formulario">
-                    <div class="conjunto-columna">
-                        <h3>Conjunto A</h3>
-
-                        <?php
-                        for ($i = 0; $i < $cantidadA; $i++) {
-                            echo '<label for="a' . $i . '">Elemento ' . ($i + 1) . ':</label>';
-                            echo '<input type="number" id="a' . $i . '" name="conjuntoA[]" step="1" required>';
-                        }
-                        ?>
-                    </div>
-
-                    <div class="conjunto-columna">
-                        <h3>Conjunto B</h3>
-
-                        <?php
-                        for ($i = 0; $i < $cantidadB; $i++) {
-                            echo '<label for="b' . $i . '">Elemento ' . ($i + 1) . ':</label>';
-                            echo '<input type="number" id="b' . $i . '" name="conjuntoB[]" step="1" required>';
-                        }
-                        ?>
-                    </div>
-                </div>
-
-                <button type="submit">Calcular operaciones</button>
-            </form>
-        <?php
-        }
-    } else if (
-        $_SERVER["REQUEST_METHOD"] == "POST" &&
         !empty($_POST["conjuntoA"]) &&
         !empty($_POST["conjuntoB"])
     ) {
-        $arregloA = $_POST["conjuntoA"];
-        $arregloB = $_POST["conjuntoB"];
+        $arregloA = array_map('trim', explode(',', $_POST["conjuntoA"]));
+        $arregloB = array_map('trim', explode(',', $_POST["conjuntoB"]));
+        $arregloA = array_filter($arregloA, fn($v) => $v !== '');
+        $arregloB = array_filter($arregloB, fn($v) => $v !== '');
         $datosValidos = true;
 
         if (
@@ -118,27 +70,31 @@ require 'Clases/conjuntos.php';
     } else {
         ?>
         <form method="POST" action="">
-            <label for="cantidadA">Cantidad de elementos de A:</label>
-            <input
-                type="number"
-                id="cantidadA"
-                name="cantidadA"
-                min="1"
-                max="20"
-                step="1"
-                required>
+            <div class="conjuntos-formulario">
+                <div class="conjunto-columna">
+                    <h3>Conjunto A</h3>
+                    <label for="conjuntoA">Elementos de A (separados por coma):</label>
+                    <input
+                        type="text"
+                        id="conjuntoA"
+                        name="conjuntoA"
+                        placeholder="ej: 1, 2, 3, 4"
+                        required>
+                </div>
 
-            <label for="cantidadB">Cantidad de elementos de B:</label>
-            <input
-                type="number"
-                id="cantidadB"
-                name="cantidadB"
-                min="1"
-                max="20"
-                step="1"
-                required>
+                <div class="conjunto-columna">
+                    <h3>Conjunto B</h3>
+                    <label for="conjuntoB">Elementos de B (separados por coma):</label>
+                    <input
+                        type="text"
+                        id="conjuntoB"
+                        name="conjuntoB"
+                        placeholder="ej: 3, 4, 5, 6"
+                        required>
+                </div>
+            </div>
 
-            <button type="submit">Generar campos</button>
+            <button type="submit">Calcular operaciones</button>
         </form>
     <?php
     }
