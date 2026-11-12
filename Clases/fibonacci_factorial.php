@@ -21,7 +21,6 @@ class Secuencia
         for ($i = 0; $i < $this->numero; $i++) {
             $resultado .= $anterior;
 
-            // CORRECCIÓN 1: Faltaba el signo de resta (-) entre numero y 1
             if ($i < $this->numero - 1) {
                 $resultado .= ", ";
             }

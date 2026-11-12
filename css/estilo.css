@@ -89,7 +89,6 @@ a:hover {
   color: #19283d;
 }
 
-/* Portada: bloque de bienvenida y catalogo flexible. */
 .bienvenida {
   padding: 38px 5%;
   background-color: #efd1a5;
@@ -157,7 +156,6 @@ a:hover {
   font-size: 17px;
 }
 
-/* Paneles: las dos clases de pagina existentes comparten el aspecto. */
 .contenedor-app {
   padding: 32px 5%;
   background-color: #fffaf2;
@@ -174,9 +172,7 @@ a:hover {
   box-shadow: 6px 6px 0px #e1d9cb;
 }
 
-/* Grid de una columna mantiene cada etiqueta junto a su campo.
-   No se cambia el display de input: los campos hidden siguen ocultos.
-   Se conserva el indicador de foco nativo del navegador. */
+
 form {
   display: grid;
   grid-template-columns: 1fr;
@@ -306,7 +302,6 @@ button:hover {
   border-top: 4px solid #19283d;
 }
 
-/* Resultados y errores se distinguen por borde y fondo. */
 .resultado {
   margin-top: 28px;
   padding: 24px 5%;
@@ -357,7 +352,6 @@ button:hover {
   margin-bottom: 0px;
 }
 
-/* Tablas: solo propiedades presentes en home.css. */
 table {
   width: 100%;
   margin: 24px 0px;

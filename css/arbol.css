@@ -9,14 +9,11 @@
   border-radius: 15px;
 }
 
-/* El dibujo se achica solo en pantallas pequeñas */
 .arbol-svg {
   max-width: 100%;
   height: auto;
 }
 
-/* ---------- Líneas ---------- */
-/* OJO: en SVG el color del contorno es "stroke" y el relleno es "fill" */
 .arbol-linea-izq {
   stroke: #4f8cff;
   stroke-width: 3px;
@@ -27,7 +24,6 @@
   stroke-width: 3px;
 }
 
-/* ---------- Nodos ---------- */
 .arbol-nodo {
   fill: #e50914;
   stroke: #ffffff;
@@ -41,12 +37,10 @@
   fill: #f6b800;
 }
 
-/* La raíz tiene su propio color */
 .arbol-raiz {
   fill: #113ccf;
 }
 
-/* Texto dentro del nodo */
 .arbol-texto {
   fill: #ffffff;
   font-family: Arial, Helvetica, sans-serif;
@@ -55,7 +49,6 @@
   text-anchor: middle;
 }
 
-/* ---------- Leyenda ---------- */
 .arbol-leyenda {
   margin-top: 12px;
   text-align: center;
