@@ -34,25 +34,32 @@ class ArbolBinario
                 $this->raiz = null;
             }
         }
-    }private function convertirArreglo($texto)
+    }
+    private function convertirArreglo($texto)
     {
-        $arreglo = []; $palabra = "";
+        $arreglo = [];
+        $palabra = "";
         for ($i = 0; $i < strlen($texto); $i++) {
             $caracter = $texto[$i];
             if ($caracter != " " && $caracter != "\n" && $caracter != "\t") {
                 $palabra .= $caracter;
             } else if (!empty($palabra)) {
-                $arreglo[] = $palabra; $palabra = "";
+                $arreglo[] = $palabra;
+                $palabra = "";
             }
         }
-        if (!empty($palabra)) { $arreglo[] = $palabra; }
+        if (!empty($palabra)) {
+            $arreglo[] = $palabra;
+        }
         return $arreglo;
     }
 
     private function buscarIndice($arreglo, $valor)
     {
         for ($i = 0; $i < count($arreglo); $i++) {
-            if ($arreglo[$i] == $valor) { return $i; }
+            if ($arreglo[$i] == $valor) {
+                return $i;
+            }
         }
         return -1;
     }
@@ -62,7 +69,9 @@ class ArbolBinario
         $resultado = [];
         for ($i = 0; $i < $longitud; $i++) {
             $indice = $inicio + $i;
-            if ($indice < count($arreglo)) { $resultado[] = $arreglo[$indice]; }
+            if ($indice < count($arreglo)) {
+                $resultado[] = $arreglo[$indice];
+            }
         }
         return $resultado;
     }
@@ -71,7 +80,9 @@ class ArbolBinario
     {
         for ($i = 0; $i < count($arreglo); $i++) {
             for ($j = $i + 1; $j < count($arreglo); $j++) {
-                if ($arreglo[$i] == $arreglo[$j]) { return false; }
+                if ($arreglo[$i] == $arreglo[$j]) {
+                    return false;
+                }
             }
         }
         return true;
@@ -79,18 +90,26 @@ class ArbolBinario
 
     private function arreglosIguales($arreglo1, $arreglo2)
     {
-        if (count($arreglo1) != count($arreglo2)) { return false; }
+        if (count($arreglo1) != count($arreglo2)) {
+            return false;
+        }
         for ($i = 0; $i < count($arreglo1); $i++) {
-            if ($arreglo1[$i] != $arreglo2[$i]) { return false; }
+            if ($arreglo1[$i] != $arreglo2[$i]) {
+                return false;
+            }
         }
         return true;
     }
 
     private function construirPreIn($preorden, $inorden)
     {
-        if (empty($preorden) || count($preorden) != count($inorden)) { return null; }
+        if (empty($preorden) || count($preorden) != count($inorden)) {
+            return null;
+        }
         $indiceRaiz = $this->buscarIndice($inorden, $preorden[0]);
-        if ($indiceRaiz == -1) { return null; }
+        if ($indiceRaiz == -1) {
+            return null;
+        }
         $nodo = new Nodo($preorden[0]);
         $nodo->izquierdo = $this->construirPreIn($this->subArreglo($preorden, 1, $indiceRaiz), $this->subArreglo($inorden, 0, $indiceRaiz));
         $nodo->derecho = $this->construirPreIn($this->subArreglo($preorden, $indiceRaiz + 1, count($preorden) - $indiceRaiz - 1), $this->subArreglo($inorden, $indiceRaiz + 1, count($inorden) - $indiceRaiz - 1));
@@ -99,10 +118,14 @@ class ArbolBinario
 
     private function construirInPost($inorden, $postorden)
     {
-        if (empty($inorden) || count($inorden) != count($postorden)) { return null; }
+        if (empty($inorden) || count($inorden) != count($postorden)) {
+            return null;
+        }
         $valorRaiz = $postorden[count($postorden) - 1];
         $indiceRaiz = $this->buscarIndice($inorden, $valorRaiz);
-        if ($indiceRaiz == -1) { return null; }
+        if ($indiceRaiz == -1) {
+            return null;
+        }
         $nodo = new Nodo($valorRaiz);
         $nodo->izquierdo = $this->construirInPost($this->subArreglo($inorden, 0, $indiceRaiz), $this->subArreglo($postorden, 0, $indiceRaiz));
         $nodo->derecho = $this->construirInPost($this->subArreglo($inorden, $indiceRaiz + 1, count($inorden) - $indiceRaiz - 1), $this->subArreglo($postorden, $indiceRaiz, count($postorden) - $indiceRaiz - 1));
@@ -111,11 +134,17 @@ class ArbolBinario
 
     private function construirPrePost($preorden, $postorden)
     {
-        if (empty($preorden) || count($preorden) != count($postorden) || $preorden[0] != $postorden[count($postorden) - 1]) { return null; }
+        if (empty($preorden) || count($preorden) != count($postorden) || $preorden[0] != $postorden[count($postorden) - 1]) {
+            return null;
+        }
         $nodo = new Nodo($preorden[0]);
-        if (count($preorden) == 1) { return $nodo; }
+        if (count($preorden) == 1) {
+            return $nodo;
+        }
         $indiceHijo = $this->buscarIndice($postorden, $preorden[1]);
-        if ($indiceHijo == -1 || $indiceHijo == count($postorden) - 1) { return null; }
+        if ($indiceHijo == -1 || $indiceHijo == count($postorden) - 1) {
+            return null;
+        }
         $tamanoIzquierdo = $indiceHijo + 1;
         $nodo->izquierdo = $this->construirPrePost($this->subArreglo($preorden, 1, $tamanoIzquierdo), $this->subArreglo($postorden, 0, $tamanoIzquierdo));
         $nodo->derecho = $this->construirPrePost($this->subArreglo($preorden, $tamanoIzquierdo + 1, count($preorden) - $tamanoIzquierdo - 1), $this->subArreglo($postorden, $tamanoIzquierdo, count($postorden) - $tamanoIzquierdo - 1));
@@ -127,8 +156,12 @@ class ArbolBinario
         $resultado = [];
         if (!empty($nodo)) {
             $resultado[] = $nodo->valor;
-            foreach ($this->obtenerPreorden($nodo->izquierdo) as $valor) { $resultado[] = $valor; }
-            foreach ($this->obtenerPreorden($nodo->derecho) as $valor) { $resultado[] = $valor; }
+            foreach ($this->obtenerPreorden($nodo->izquierdo) as $valor) {
+                $resultado[] = $valor;
+            }
+            foreach ($this->obtenerPreorden($nodo->derecho) as $valor) {
+                $resultado[] = $valor;
+            }
         }
         return $resultado;
     }
@@ -136,9 +169,13 @@ class ArbolBinario
     {
         $resultado = [];
         if (!empty($nodo)) {
-            foreach ($this->obtenerInorden($nodo->izquierdo) as $valor) { $resultado[] = $valor; }
+            foreach ($this->obtenerInorden($nodo->izquierdo) as $valor) {
+                $resultado[] = $valor;
+            }
             $resultado[] = $nodo->valor;
-            foreach ($this->obtenerInorden($nodo->derecho) as $valor) { $resultado[] = $valor; }
+            foreach ($this->obtenerInorden($nodo->derecho) as $valor) {
+                $resultado[] = $valor;
+            }
         }
         return $resultado;
     }
@@ -147,8 +184,12 @@ class ArbolBinario
     {
         $resultado = [];
         if (!empty($nodo)) {
-            foreach ($this->obtenerPostorden($nodo->izquierdo) as $valor) { $resultado[] = $valor; }
-            foreach ($this->obtenerPostorden($nodo->derecho) as $valor) { $resultado[] = $valor; }
+            foreach ($this->obtenerPostorden($nodo->izquierdo) as $valor) {
+                $resultado[] = $valor;
+            }
+            foreach ($this->obtenerPostorden($nodo->derecho) as $valor) {
+                $resultado[] = $valor;
+            }
             $resultado[] = $nodo->valor;
         }
         return $resultado;
@@ -156,9 +197,13 @@ class ArbolBinario
 
     public function imprimirEstructura($nodo, $nivel = 0, $etiqueta = "Raíz")
     {
-        if (empty($nodo)) { return ""; }
+        if (empty($nodo)) {
+            return "";
+        }
         $espacios = "";
-        for ($i = 0; $i < $nivel; $i++) { $espacios .= "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"; }
+        for ($i = 0; $i < $nivel; $i++) {
+            $espacios .= "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
+        }
         $resultado = "<p>" . $espacios . "└─ " . $etiqueta . ": " . htmlspecialchars((string)$nodo->valor) . "</p>";
         if (!empty($nodo->izquierdo) || !empty($nodo->derecho)) {
             $resultado .= !empty($nodo->izquierdo) ? $this->imprimirEstructura($nodo->izquierdo, $nivel + 1, "Izq") : "<p>" . $espacios . "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;└─ Izq: (Vacío)</p>";
@@ -168,20 +213,28 @@ class ArbolBinario
     }
     private function recorrerParaDibujo($nodo, $nivel, $padre, $lado)
     {
-        if (empty($nodo)) { return; }
+        if (empty($nodo)) {
+            return;
+        }
         $indiceNodo = count($this->nodosDibujo);
         $this->nodosDibujo[] = ["valor" => $nodo->valor, "nivel" => $nivel, "columna" => 0, "padre" => $padre, "lado" => $lado];
-        if ($nivel > $this->nivelMaximo) { $this->nivelMaximo = $nivel; }
+        if ($nivel > $this->nivelMaximo) {
+            $this->nivelMaximo = $nivel;
+        }
         $this->recorrerParaDibujo($nodo->izquierdo, $nivel + 1, $indiceNodo, "izq");
         $this->nodosDibujo[$indiceNodo]["columna"] = $this->columnaActual++;
         $this->recorrerParaDibujo($nodo->derecho, $nivel + 1, $indiceNodo, "der");
     }
     public function obtenerNodos()
     {
-        $this->nodosDibujo = []; $this->columnaActual = 0; $this->nivelMaximo = 0;
+        $this->nodosDibujo = [];
+        $this->columnaActual = 0;
+        $this->nivelMaximo = 0;
         $this->recorrerParaDibujo($this->raiz, 0, -1, "raiz");
         return $this->nodosDibujo;
     }
-    public function obtenerNivelMaximo() {
-        return $this -> nivelMaximo;}
+    public function obtenerNivelMaximo()
+    {
+        return $this->nivelMaximo;
+    }
 }

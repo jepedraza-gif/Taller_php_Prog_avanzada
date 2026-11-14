@@ -1,6 +1,35 @@
 <?php
 require 'include/encabezado.php';
 require 'Clases/fibonacci_factorial.php';
+
+$mensaje = "";
+$numeroTexto = "";
+$operacion = "";
+$terminos = [];
+$factorial = null;
+
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    $numeroTexto = $_POST["numero"] ?? "";
+    $operacion = $_POST["operacion"] ?? "";
+
+    $numero = filter_var($numeroTexto, FILTER_VALIDATE_INT);
+
+    if ($numero === false || $numero < 0) {
+        $mensaje = "Ingresa un número entero igual o mayor que cero.";
+    } elseif ($operacion != "fibonacci" && $operacion != "factorial") {
+        $mensaje = "Selecciona una operación válida.";
+    } elseif ($operacion == "fibonacci" && $numero == 0) {
+        $mensaje = "La sucesión debe tener al menos un término.";
+    } else {
+        $secuencia = new Secuencia($numero);
+
+        if ($operacion == "fibonacci") {
+            $terminos = $secuencia->generarFibonacci();
+        } else {
+            $factorial = $secuencia->calcularFactorial();
+        }
+    }
+}
 ?>
 
 <section class="app-panel">
@@ -16,66 +45,50 @@ require 'Clases/fibonacci_factorial.php';
             step="1"
             required>
 
-        <label>Operación:</label>
-        <div class="operaciones-grupo">
-            <button type="submit" name="operacion" value="fibonacci">Fibonacci</button>
-            <button type="submit" name="operacion" value="factorial">Factorial</button>
-        </div>
+        <p>
+            Para Fibonacci, indica cuántos términos quieres obtener.
+            Para factorial, indica el número que deseas calcular.
+        </p>
 
-        <button type="submit">Calcular</button>
+        <div class="operaciones-grupo">
+            <button type="submit" name="operacion" value="fibonacci">
+                Generar Fibonacci
+            </button>
+
+            <button type="submit" name="operacion" value="factorial">
+                Obtener factorial
+            </button>
+        </div>
     </form>
 
-    <?php
-    if ($_SERVER["REQUEST_METHOD"] == "POST") {
-        if (
-            (!empty($_POST["numero"]) || $_POST["numero"] == "0") &&
-            !empty($_POST["operacion"])
-        ) {
-            $numeroIngresado = (int)$_POST["numero"];
-            $operacion = $_POST["operacion"];
+    <?php if ($mensaje != "") { ?>
+        <div class="resultado mensaje-error">
+            <p><?php echo $mensaje; ?></p>
+        </div>
 
-            if (
-                $numeroIngresado < 0 ||
-                (string)$numeroIngresado != (string)$_POST["numero"]
-            ) {
-                echo '<div class="resultado mensaje-error">';
-                echo 'Ingresa un número entero positivo.';
-                echo '</div>';
-            } else if (
-                $operacion != "fibonacci" &&
-                $operacion != "factorial"
-            ) {
-                echo '<div class="resultado mensaje-error">';
-                echo 'Selecciona una operación válida.';
-                echo '</div>';
-            } else if (
-                $operacion == "fibonacci" &&
-                $numeroIngresado < 1
-            ) {
-                echo '<div class="resultado mensaje-error">';
-                echo 'Para Fibonacci debes ingresar al menos un término.';
-                echo '</div>';
-            } else {
-                $appSecuencia = new Secuencia($numeroIngresado);
+    <?php } elseif ($operacion == "fibonacci" && count($terminos) > 0) { ?>
+        <div class="resultado">
+            <h3>Sucesión de Fibonacci</h3>
+            <p>
+                <?php
+                foreach ($terminos as $posicion => $termino) {
+                    if ($posicion > 0) {
+                        echo ", ";
+                    }
 
-                echo '<div class="resultado">';
-
-                if ($operacion == "fibonacci") {
-                    echo '<strong>Sucesión de Fibonacci:</strong><br>';
-                    echo $appSecuencia->generarFibonacci();
-                } else {
-                    echo '<strong>Factorial de ' . $numeroIngresado . ':</strong><br>';
-                    echo $appSecuencia->calcularFactorial();
+                    echo $termino;
                 }
+                ?>
+            </p>
+            <p>Cantidad de términos: <?php echo count($terminos); ?></p>
+        </div>
 
-                echo '</div>';
-            }
-        } else {
-            echo '<div class="resultado mensaje-error">';
-            echo 'Ingresa un número válido y selecciona una operación.';
-            echo '</div>';
-        }
-    }
-    ?>
-
+    <?php } elseif ($factorial !== null) { ?>
+        <div class="resultado">
+            <h3>Resultado del factorial</h3>
+            <p>
+                <?php echo $numero . "! = " . $factorial; ?>
+            </p>
+        </div>
+    <?php } ?>
 </section>

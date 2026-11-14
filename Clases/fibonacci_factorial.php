@@ -10,41 +10,30 @@ class Secuencia
 
     public function generarFibonacci()
     {
-        if ($this->numero < 1) {
-            return "Debes ingresar al menos un término.";
-        }
+        $terminos = [];
 
-        $anterior = 0;
-        $actual = 1;
-        $resultado = "";
-
-        for ($i = 0; $i < $this->numero; $i++) {
-            $resultado .= $anterior;
-
-            if ($i < $this->numero - 1) {
-                $resultado .= ", ";
+        for ($posicion = 0; $posicion < $this->numero; $posicion++) {
+            if ($posicion < 2) {
+                $terminos[$posicion] = $posicion;
+            } else {
+                $terminos[$posicion] =
+                    $terminos[$posicion - 1] + $terminos[$posicion - 2];
             }
-
-            $siguiente = $anterior + $actual;
-            $anterior = $actual;
-            $actual = $siguiente;
         }
 
-        return $resultado;
+        return $terminos;
     }
 
     public function calcularFactorial()
     {
-        if ($this->numero < 0) {
-            return "El factorial requiere un entero no negativo.";
+        $producto = 1;
+        $factor = $this->numero;
+
+        while ($factor > 1) {
+            $producto *= $factor;
+            $factor--;
         }
 
-        $resultado = 1;
-
-        for ($i = 1; $i <= $this->numero; $i++) {
-            $resultado = $resultado * $i;
-        }
-
-        return $resultado;
+        return $producto;
     }
 }

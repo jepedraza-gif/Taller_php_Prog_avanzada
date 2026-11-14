@@ -5,40 +5,108 @@ require 'Clases/conjuntos.php';
 
 <section class="contenedor-app">
     <h2>4. Operaciones con conjuntos</h2>
-    <p>Ingresa los elementos de los conjuntos A y B.</p>
+    <p>Ingresa entre 1 y 20 enteros por conjunto, separados por comas.</p>
+
+    <form method="POST" action="">
+        <div class="conjuntos-formulario">
+            <div class="conjunto-columna">
+                <h3>Conjunto A</h3>
+                <label for="conjuntoA">Elementos de A:</label>
+                <input
+                    type="text"
+                    id="conjuntoA"
+                    name="conjuntoA"
+                    placeholder="Ejemplo: 0, 1, 2, 3"
+                    required>
+            </div>
+
+            <div class="conjunto-columna">
+                <h3>Conjunto B</h3>
+                <label for="conjuntoB">Elementos de B:</label>
+                <input
+                    type="text"
+                    id="conjuntoB"
+                    name="conjuntoB"
+                    placeholder="Ejemplo: -2, 0, 3, 4"
+                    required>
+            </div>
+        </div>
+
+        <button type="submit">Calcular operaciones</button>
+    </form>
 
     <?php
-    if (
-        $_SERVER["REQUEST_METHOD"] == "POST" &&
-        !empty($_POST["conjuntoA"]) &&
-        !empty($_POST["conjuntoB"])
-    ) {
-        $arregloA = array_map('trim', explode(',', $_POST["conjuntoA"]));
-        $arregloB = array_map('trim', explode(',', $_POST["conjuntoB"]));
-        $arregloA = array_filter($arregloA, fn($v) => $v !== '');
-        $arregloB = array_filter($arregloB, fn($v) => $v !== '');
-        $datosValidos = true;
+    if ($_SERVER["REQUEST_METHOD"] == "POST") {
+        $textoA = "";
+        $textoB = "";
 
-        if (
-            count($arregloA) < 1 || count($arregloA) > 20 ||
-            count($arregloB) < 1 || count($arregloB) > 20
-        ) {
-            $datosValidos = false;
-        }
-
-        for ($i = 0; $i < count($arregloA); $i++) {
-            if (
-                $arregloA[$i] == "" ||
-                (string)(int)$arregloA[$i] != (string)$arregloA[$i]
-            ) {
-                $datosValidos = false;
+        foreach ($_POST as $campo => $valor) {
+            if (is_string($valor)) {
+                if ($campo == "conjuntoA") {
+                    $textoA = trim($valor);
+                } elseif ($campo == "conjuntoB") {
+                    $textoB = trim($valor);
+                }
             }
         }
 
-        for ($i = 0; $i < count($arregloB); $i++) {
+        $arregloA = [];
+        $arregloB = [];
+        $datosValidos = true;
+
+        if (
+            (empty($textoA) && $textoA !== "0") ||
+            (empty($textoB) && $textoB !== "0")
+        ) {
+            $datosValidos = false;
+        } else {
+            $textoA .= ",";
+            $elemento = "";
+
+            for ($i = 0; $i < strlen($textoA); $i++) {
+                if ($textoA[$i] != ",") {
+                    $elemento .= $textoA[$i];
+                } else {
+                    $elemento = trim($elemento);
+
+                    if (
+                        (empty($elemento) && $elemento !== "0") ||
+                        (string)(int)$elemento !== $elemento
+                    ) {
+                        $datosValidos = false;
+                        break;
+                    }
+
+                    $arregloA[] = (int)$elemento;
+                    $elemento = "";
+                }
+            }
+
+            $textoB .= ",";
+            $elemento = "";
+
+            for ($i = 0; $i < strlen($textoB); $i++) {
+                if ($textoB[$i] != ",") {
+                    $elemento .= $textoB[$i];
+                } else {
+                    $elemento = trim($elemento);
+
+                    if (
+                        (empty($elemento) && $elemento !== "0") ||
+                        (string)(int)$elemento !== $elemento
+                    ) {
+                        $datosValidos = false;
+                        break;
+                    }
+
+                    $arregloB[] = (int)$elemento;
+                    $elemento = "";
+                }
+            }
+
             if (
-                $arregloB[$i] == "" ||
-                (string)(int)$arregloB[$i] != (string)$arregloB[$i]
+                count($arregloA) < 1 || count($arregloA) > 20 ||
+                count($arregloB) < 1 || count($arregloB) > 20
             ) {
                 $datosValidos = false;
             }
@@ -46,57 +114,40 @@ require 'Clases/conjuntos.php';
 
         if (!$datosValidos) {
             echo '<div class="resultado mensaje-error">';
-            echo '<p>Ingresa entre 1 y 20 enteros válidos por conjunto.</p>';
+            echo '<p>Ingresa entre 1 y 20 enteros válidos por conjunto, ';
+            echo 'sin dejar posiciones vacías entre las comas.</p>';
             echo '</div>';
         } else {
             $appConjuntos = new OperacionesConjuntos($arregloA, $arregloB);
 
             echo '<div class="resultado">';
-            echo '<p>Conjunto A: ' . $appConjuntos->formatearSalida($arregloA) . '</p>';
-            echo '<p>Conjunto B: ' . $appConjuntos->formatearSalida($arregloB) . '</p>';
-            echo '<p>Unión (A ∪ B): ' . $appConjuntos->formatearSalida($appConjuntos->union()) . '</p>';
-            echo '<p>Intersección (A ∩ B): ' . $appConjuntos->formatearSalida($appConjuntos->interseccion()) . '</p>';
-            echo '<p>Diferencia (A - B): ' . $appConjuntos->formatearSalida($appConjuntos->diferenciaAB()) . '</p>';
-            echo '<p>Diferencia (B - A): ' . $appConjuntos->formatearSalida($appConjuntos->diferenciaBA()) . '</p>';
+
+            echo '<p>Conjunto A: ';
+            echo $appConjuntos->formatearSalida($arregloA);
+            echo '</p>';
+
+            echo '<p>Conjunto B: ';
+            echo $appConjuntos->formatearSalida($arregloB);
+            echo '</p>';
+
+            echo '<p>Unión (A ∪ B): ';
+            echo $appConjuntos->formatearSalida($appConjuntos->union());
+            echo '</p>';
+
+            echo '<p>Intersección (A ∩ B): ';
+            echo $appConjuntos->formatearSalida($appConjuntos->interseccion());
+            echo '</p>';
+
+            echo '<p>Diferencia (A - B): ';
+            echo $appConjuntos->formatearSalida($appConjuntos->diferenciaAB());
+            echo '</p>';
+
+            echo '<p>Diferencia (B - A): ';
+            echo $appConjuntos->formatearSalida($appConjuntos->diferenciaBA());
+            echo '</p>';
+
             echo '</div>';
-
-            echo '<p><a class="boton" href="conjuntos.php">';
-            echo 'Calcular otros conjuntos</a></p>';
         }
-    } else if ($_SERVER["REQUEST_METHOD"] == "POST") {
-        echo '<div class="resultado mensaje-error">';
-        echo '<p>Los datos enviados no son válidos.</p>';
-        echo '</div>';
-    } else {
-        ?>
-        <form method="POST" action="">
-            <div class="conjuntos-formulario">
-                <div class="conjunto-columna">
-                    <h3>Conjunto A</h3>
-                    <label for="conjuntoA">Elementos de A (separados por coma):</label>
-                    <input
-                        type="text"
-                        id="conjuntoA"
-                        name="conjuntoA"
-                        placeholder="ej: 1, 2, 3, 4"
-                        required>
-                </div>
-
-                <div class="conjunto-columna">
-                    <h3>Conjunto B</h3>
-                    <label for="conjuntoB">Elementos de B (separados por coma):</label>
-                    <input
-                        type="text"
-                        id="conjuntoB"
-                        name="conjuntoB"
-                        placeholder="ej: 3, 4, 5, 6"
-                        required>
-                </div>
-            </div>
-
-            <button type="submit">Calcular operaciones</button>
-        </form>
-    <?php
     }
     ?>
 </section>
